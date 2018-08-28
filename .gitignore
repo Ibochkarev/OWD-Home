@@ -6,3 +6,8 @@
 /**/package-lock.json
 /**/Thumbs.db
 /**/*.DS_Store
+.idea/OWD-Home.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
