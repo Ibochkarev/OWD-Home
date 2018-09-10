@@ -48,6 +48,9 @@ body
     &:hover
       background-color: #000
 
+a
+  transition: color 0.3s ease
+
 ul
   padding: 0
   list-style: none
@@ -72,7 +75,7 @@ b, strong
   font-weight: bold
 
 .container
-  width: 1270px !important
+  max-width: 1270px
 
 .hero
   height: 100vh
@@ -83,11 +86,6 @@ b, strong
   background-size: cover
   #header
     position: relative
-    #logo
-      text-decoration: none
-      color: white
-      font-size: 5vh
-      font-weight: bold
     nav
       text-align: right
       #menu-icon
@@ -95,21 +93,20 @@ b, strong
         font-size: 18px
         font-weight: 700
         text-transform: uppercase
+        text-decoration: none
         span
           font-size: 45px
           color: #e22028
-  header.hero-header
+  #hero-header
     text-align: center
     h1.hero-title
-      text-shadow: 0 0 3px rgba(0, 0, 0, 0.25)
       color: #2f1946
       font-size: 80px
       font-weight: 700
       text-transform: uppercase
       letter-spacing: 1.67px
-      margin-bottom: 70px
+      margin-bottom: 50px
     .btn
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.25)
       border-radius: 25px
       background-color: #81398b 
       color: #fff
@@ -126,7 +123,6 @@ b, strong
 .blocks
   text-align: center
   position: absolute
-  bottom: 31%
   left: 50%
   transform: translate(-50%, -50%)
   .hero-item
@@ -138,6 +134,8 @@ b, strong
     margin-left: 15px
     margin-right: 15px
     transition: box-shadow 500ms
+    position: relative
+    bottom: 50px
     &:hover
       box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5)
       cursor: pointer
@@ -199,6 +197,81 @@ b, strong
       line-height: 36px
       float: right
 
+.center-bottom
+  height: 733px
+  padding: 1em
+  box-sizing: border-box
+  background: url(../img/centre.png) center center no-repeat
+  background-size: cover
+  margin-bottom: 160px
+  form
+    text-align: center
+    margin: 85px 20px
+    legend
+      text-align: center
+      margin-top: 47px
+      color: #2f1946
+      font-size: 38px
+      font-weight: 700
+      text-transform: uppercase
+      margin-bottom: 40px
+    button
+      border-radius: 4px
+      font-size: 16px
+      font-weight: 700
+      letter-spacing: 0.8px
+      width: 100%
+      padding-top: 12px
+      padding-bottom: 12px
+      transition: all 0.3s ease
+      &.facebook
+        background-color: #2f53a3 
+        border: 1px solid #2f53a3
+        color: #ffffff
+        &:hover
+          color: #2f53a3
+          border: 1px solid #2f53a3
+          background-color: transparent
+      &.go
+        background-color: #81398b 
+        border: 1px solid #81398b
+        color: #ffffff
+        &:hover
+          color: #81398b
+          border: 1px solid #81398b
+          background-color: transparent
+    h4
+      width: 100%
+      border-bottom: 1px solid #dcdcdc
+      line-height: 0.1em
+      margin: 10px 0 20px
+      color: #9b9b9b
+      font-size: 14px
+      font-weight: 700
+      text-transform: uppercase
+      letter-spacing: 0.7px
+      padding-top: 10px
+      span
+        background:#fff
+        padding: 0 10px
+    input
+      display: block   
+      margin: 13px 0
+      padding: 10px 10px
+      border-radius: 4px
+      border: 2px solid #dcdcdc
+      background-color: #ffffff  
+      color: #642f6b
+      font-size: 16px
+      font-weight: 700
+      letter-spacing: 0.69px   
+      width: 100%
+      &:focus
+        background-color: transparent
+        color: #81398b
+    ::placeholder
+      color: #642f6b
+      
 .joint_now
   height: 733px
   padding: 1em
@@ -206,6 +279,43 @@ b, strong
   color: white
   background: url(../img/join.png) center center no-repeat
   background-size: cover
+  .outer-div
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 70vh
+    .item
+      width: 373px
+      height: 373px
+      background-color: #ffffff
+      border-radius: 50%
+      text-align: center
+      color: #000000
+      padding-top: 20px
+      span
+        display: block
+        color: #67326e
+        font-weight: 700
+        &.one
+          font-size: 60px
+          padding-top: 60px
+          margin-bottom: 0
+        &.two
+          font-size: 46px
+          margin-bottom: 30px
+      a.btn-started
+        border-radius: 3px
+        background-color: #e22028
+        background-image: linear-gradient(to right, #e22028 0%, #f9b416 100%)
+        padding: 12px 30px
+        text-transform: uppercase
+        font-size: 16px 
+        font-weight: 700
+        color: #ffffff
+        text-decoration: none
+        transition: all 0.3s ease
+        &:hover
+          opacity: 0.9
 
 // Footer
 footer
@@ -295,5 +405,41 @@ footer
     line-height: 24px
     text-align: center
     padding: 12px 0 30px 0
+
+
+@media only screen and (max-width : 480px)
+    
+    .hero #hero-header h1.hero-title
+      font-size: 40px
+    .content-center .welcome
+      margin-top: 150px
+
+    .blocks
+      display: none
+
+    .center-bottom form
+      margin: 85px 5px
+      legend
+        font-size: 32px
+        margin-bottom: 5px
+    
+    .joint_now
+      height: 450px 
+      .outer-div .item
+        border-radius: 0
+        margin-top: 20px
+
+    footer .newsletter form .InputAddOn
+      flex-direction: column
+      input
+        margin: 5px 0
+
+    li.link
+      display: block
+
+@media only screen and (max-width : 768px)
+    /**/
+    .blocks
+      display: none
 
 // @import "media" // Always at the end

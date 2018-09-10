@@ -10,7 +10,8 @@
 	<meta name="description" content="">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 	
 	<!-- Template Basic Images Start -->
 	<meta property="og:image" content="path/to/image.jpg">
@@ -27,7 +28,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
   <!-- Load font awesome icons -->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
 
   <!-- The social media icon bar -->
 </head>
@@ -36,14 +37,18 @@
 	
 	<section class="hero">
 		<div class="container">
+			<div class="row">
 			<header id="header">
-			  <nav><a id="menu-icon">MENU  <span>&#8801;</span></a></nav>
+			  <nav><a id="menu-icon">MENU <span>&#8801;</span></a></nav>
 			</header>
-			<header class="hero-header">
-				<div class="hero-img"></div>
+			<header id="hero-header">
+				<div class="hero-img">
+					<a href="#"><img src="./img/logo.png" alt=""></a>
+				</div>
 			  <h1 class="hero-title">Find Someone to Click With</h1>
 			  <a href="#" class="btn">Get Started</a>
 			</header>
+			</div>
 		</div>
 	</section>
 
@@ -71,7 +76,7 @@
 	<section class="content-center">
 		<div class="container">
 			<div class="row" id="top-content">
-				<div class="col-md-8 col-md-offset-2">
+				<div class="col-md-8 col-md-offset-2 col-xs-12">
 					<h1 class="welcome">
 						<img src="img/Heart.png" alt="">
 						 WELCOME!
@@ -82,18 +87,41 @@
 					</blockquote>
 				</div>
 			</div>
-			<div class="row" id="bottom-content">
-				<div class="col-md-12">
-					21212
+		</div>
+	</section>
+
+	<section class="center-bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
+					<form action="">
+						<legend>IT`S FREE TO JOIN</legend>
+						<button type="submit" class="facebook">f SIGN UP WITH FACEBOOK</button>
+						<h4><span>OR</span></h4>
+						<input type="email" placeholder="Email">
+						<input type="text" placeholder="Username">
+						<input type="text" placeholder="Password">
+						<input type="text" placeholder="Confirm Password">
+						<button type="submit" class="go">Let’s Go!</button>
+					</form>
 				</div>
 			</div>
 		</div>
 	</section>
+	
 
 	<section class="joint_now">
 		<div class="container">
 			<div class="row">
-				joint now
+				<div class="col-md-4 col-md-offset-4">
+					<div class="outer-div">
+						<div class="item">
+							<span class="one">JOIN NOW</span>
+							<span class="two">It’s free!</span>
+							<a href="#" class="btn-started">Get started</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
