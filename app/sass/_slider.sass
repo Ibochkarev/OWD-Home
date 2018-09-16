@@ -1,55 +1,83 @@
-#slides
-	position: relative
-	height: 300px
-	padding: 0px
-	margin: 0px
-	list-style-type: none
+@import "vars"
+@import "fonts"
+@import "libs"
 
-.slide
-	position: absolute
-	left: 0px
-	top: 0px
-	width: 100%
-	height: 100%
-	opacity: 0
-	z-index: 1
-	-webkit-transition: opacity 1s
-	-moz-transition: opacity 1s
-	-o-transition: opacity 1s
-	transition: opacity 1s
+.mySlider
+  display: block
+  position: relative
+  margin: 0 auto
+  overflow: hidden
+  width: 1140px
+  max-width: 100%
+  margin-top: 100px
 
-.active
-	opacity: 1
-	z-index: 2
+.slideEffect
+  .slideInner
+    display: flex
+    position: relative
+    transition: transform .5s ease-out
+  .slide
+    position: relative
 
-.controls
-	display: none
+.fadeEffect .slide
+  position: absolute
+  top: 0
+  opacity: 0
+  transition: all .5s ease-in
+  &:first-child
+    position: relative
+    opacity: 1
 
-.slide
-	font-size: 40px
-	padding: 40px
-	box-sizing: border-box
+.dots
+  display: flex
+  flex-direction: row
+  justify-content: center
+  margin: 5px 0 50px 0
+  color: #999
+  span
+	  cursor: pointer
+	  transition: all .3s ease-out
+	  font-size: 10px
+	  margin: 5px 3px
 
-.controls
-	background: #333
-	color: #fff
-	border: none
-	padding: 20px 0px
-	font-size: 20px
-	cursor: pointer
-	border: 2px solid #fff
-	margin: 10px 0px 0px 10px
-	width: 70px
-	&:hover, &:focus
-		background: #eee
-		color: #333
+.mySlider >
+  .left, .right
+    position: absolute
+    opacity: 0
+    top: calc(50% - .5em)
+    z-index: 15
+    font-size: 3em
+    cursor: pointer
+    width: 1em
+    height: 1em
+    transition: opacity .2s .1s ease-in-out
+    background-color: rgba(255, 255, 255, 0.4)
+    color: #222
+    text-align: center
 
-.container
-	position: relative
+.right .fa
+  position: absolute
+  top: 0
+  right: 10px
 
-.buttons
-	position: absolute
-	left: 0px
-	top: 0px
-	z-index: 10
-	font-size: 0px
+.left .fa
+  position: absolute
+  top: 0
+  left: 10px
+
+.mySlider
+  &:hover >
+    .left, .right
+      opacity: 1
+  >
+    .left:active, .right:active
+      transform: translateY(2px)
+
+.controls span:active
+  transform: translateY(2px)
+
+.left
+  left: 0
+
+.right
+  right: 0
