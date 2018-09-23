@@ -1,115 +1,244 @@
-// shortcut для document.querySelector (типа замена джиквери и всё такое)))
-const qS = function (el, box) {
-    if (box) {
-        if (box.querySelector(el)) return box.querySelector(el);
+'use strict';
+
+function $(elem) {
+    return document.querySelector(elem);
+}
+
+function hasClass(el, className) {
+    return el.classList ? el.classList.contains(className) : new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+}
+
+function addClass(el, className) {
+    if (el.classList) {
+        el.classList.add(className);
     } else {
-        if (document.querySelector(el)) return document.querySelector(el);
+        el.className += ' ' + className;
     }
-};
-const qSA = function (el, box) {
-    if (box) {
-        if (box.querySelectorAll(el)) return box.querySelectorAll(el);
+}
+
+function removeClass(el, className) {
+    if (el.classList) {
+        el.classList.remove(className);
     } else {
-        if (document.querySelectorAll(el)) return document.querySelectorAll(el);
+        el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     }
-};
+}
 
-if (qS(".mySlider")) document.addEventListener("DOMContentLoaded", lightSlider(3000));
+function $extendObj(_def, addons) {
+    if (typeof addons !== "undefined") {
+        for (var prop in _def) {
+            if (addons[prop] != undefined) {
+                _def[prop] = addons[prop];
+            }
+        }
+    }
+}
 
-function lightSlider(interVar) {
-    // задаём дефолтные значения для счётчиков, отступов и т.п.
-    var show = 1,
-        translate = 0;
+var slider_plugin = (function () {
 
-    // находим в ДОМ нужные элементы
-    var dots = qS(".dots"), //кнопки контроля
-        sliderDiv = qS(".mySlider"), //родительский блок слайдера
-        slideInner = qS(".slideInner"),
-        myNodeList = qSA(".slide");
+    var sl = $('.slider');
+    var slides = sl.innerHTML;
 
-    // пишем параметры в переменные
-    var slWidth = myNodeList[0].clientWidth,
-        listLength = myNodeList.length;
+    sl.innerHTML = '<div class="slider-inner">' + slides + '</div>' + '<a class="arrow-left" href="javascript:void(0);"></a><a class="arrow-right" href="javascript:void(0);"></a><div class="dots-wrapper"></div>';
 
-    // автостарт функции слайдера с интервалом
-    interval = setInterval(mySlider, interVar);
+    var my_slider = function (settings) {
 
-    //Аппендим элемменты навигации прямо из скрипта без вёрстки
-    for (var i = 0; i < listLength; ++i) {
-        var newLi = document.createElement('span');
-        newLi.innerHTML = '<i class="fa fa-circle"></i>';
-        newLi.addEventListener("click", function () {
-            data = this.dataset;
-            show = data.number;
-            restartSlider();
-        });
-        newLi.setAttribute("data-number", i);
-        dots.appendChild(newLi);
-    };
-    //находим все кнопочки контроля
-    conChilds = dots.children;
+        var _ = this;
 
-    // функция слайдера
-    function mySlider() {
-        if (document.hasFocus() && sliderDiv.classList.contains("fadeEffect")) {
-            if (show >= listLength) {
-                show = 0
-            }; // если текущий слайд последний, обнуляем счётчик
-            if (show < 0) {
-                show = listLength
-            }; // если счётчик слайдов отрицательный, чиним эту фигню
+        _.lock = false;
 
-            if (show < listLength) { //реагируем, только если счётчик слайдов имеет адекватное число
-                for (var i = 0; i < listLength; ++i) {
-                    var element = myNodeList[i],
-                        child = conChilds[i];
-                    element.style.position = "absolute";
-                    element.style.opacity = "0";
-                    child.style.color = "#999";
-                };
-                myNodeList[show].style.position = "relative";
-                myNodeList[show].style.opacity = "1";
-                conChilds[show].style.color = "#333";
-                show++;
-            };
-        };
+        _.def = {
+            target: sl,
+            dotsWrapper: $('.dots-wrapper'),
+            arrowLeft: $('.arrow-left'),
+            arrowRight: $('.arrow-right'),
+            transition: {
+                speed: 3500,
+                easing: ''
+            },
+            autoHeight: true,
+            afterChangeSlide: function afterChangeSlide() { }
+        }
 
-        if (document.hasFocus() && sliderDiv.classList.contains("slideEffect")) {
-            if (show >= listLength) {
-                show = 0
-            };
+        $extendObj(_.def, settings);
 
-            translate = -1 * slWidth * show + "px";
-            slideInner.style.transform = "translateX(" + translate + ")";
-            firstClone = myNodeList[0].cloneNode(true);
-            for (var i = 0; i < listLength; ++i) {
-                var child = conChilds[i];
-                child.style.color = "#999";
-            };
-            conChilds[show].style.color = "#333";
-            show++;
-        };
-    };
-
-    function restartSlider() {
-        mySlider();
-        clearInterval(interval);
-        interval = setInterval(mySlider, interVar);
+        _.init();
     }
 
-    //прокрутка кнопками вправо и влево
-    qS(".left").addEventListener("click", function () {
-        show -= 2;
-        if (show < 0) {
-            show = listLength - 1
-        };
-        restartSlider();
-    });
-    qS(".right").addEventListener("click", function () {
-        if (show >= listLength) {
-            show = 0
-        };
-        restartSlider();
-    });
+    my_slider.prototype.buildDots = function () {
+        var _ = this;
 
-};
+        for (var i = 0; i < _.totalSlides; i++) {
+            var dot = document.createElement('li');
+            dot.setAttribute('data-slide', i + 1);
+            _.def.dotsWrapper.appendChild(dot);
+        }
+
+        _.def.dotsWrapper.addEventListener('click', function (e) {
+            if (e.target && e.target.nodeName == "LI") {
+                _.curSlide = e.target.getAttribute('data-slide');
+                if (!_.lock) {
+                    _.gotoSlide();
+                }
+            }
+        }, false);
+    }
+    my_slider.prototype.getCurLeft = function () {
+        var _ = this;
+        _.curLeft = parseInt(_.sliderInner.style.left.split('px')[0]);
+    }
+    my_slider.prototype.gotoSlide = function () {
+        var _ = this;
+        _.lock = true;
+
+        _.sliderInner.style.transition = 'left ' + _.def.transition.speed / 1000 + 's ' + _.def.transition.easing;
+        _.sliderInner.style.left = -_.curSlide * _.slideW + 'px';
+        addClass(_.def.target, 'isAnimating');
+        setTimeout(function () {
+            _.sliderInner.style.transition = '';
+            removeClass(_.def.target, 'isAnimating');
+            _.lock = false;
+        }, _.def.transition.speed);
+        _.setDot();
+        if (_.def.autoHeight) {
+            _.def.target.style.height = _.allSlides[_.curSlide].offsetHeight + "px";
+        }
+        _.def.afterChangeSlide(_);
+    }
+    my_slider.prototype.init = function () {
+        var _ = this;
+
+        function on_resize(c, t) {
+            onresize = function () {
+                clearTimeout(t);
+                t = setTimeout(c, 100);
+            }
+            return onresize;
+        }
+
+        function loadedImg(el) {
+            var loaded = false;
+
+            function loadHandler() {
+                if (loaded) {
+                    return;
+                }
+                loaded = true;
+                _.loadedCnt++;
+                if (_.loadedCnt >= _.totalSlides + 2) {
+                    _.updateSliderDimension();
+                }
+            }
+            var img = el.querySelector('img');
+            if (img) {
+                img.onload = loadHandler;
+                img.src = img.getAttribute('data-src');
+                img.style.display = 'block';
+                if (img.complete) {
+                    loadHandler();
+                }
+            } else {
+                _.updateSliderDimension();
+            }
+        }
+
+        window.addEventListener("resize", on_resize(function () {
+            _.updateSliderDimension();
+        }), false);
+
+        _.allSlides = 0;
+        _.curSlide = 0;
+        _.curLeft = 0;
+        _.totalSlides = _.def.target.querySelectorAll('.slide').length;
+
+        _.sliderInner = _.def.target.querySelector('.slider-inner');
+        _.loadedCnt = 0;
+
+        var cloneFirst = _.def.target.querySelectorAll('.slide')[0].cloneNode(true);
+        _.sliderInner.appendChild(cloneFirst);
+        var cloneLast = _.def.target.querySelectorAll('.slide')[_.totalSlides - 1].cloneNode(true);
+        _.sliderInner.insertBefore(cloneLast, _.sliderInner.firstChild);
+
+        _.curSlide++;
+        _.allSlides = _.def.target.querySelectorAll('.slide');
+        _.sliderInner.style.width = (_.totalSlides + 2) * 100 + "%";
+        for (var _i = 0; _i < _.totalSlides + 2; _i++) {
+            _.allSlides[_i].style.width = 100 / (_.totalSlides + 2) + "%";
+            loadedImg(_.allSlides[_i]);
+        }
+
+        _.buildDots();
+        _.setDot();
+        _.initArrows();
+
+        _.isAnimating = false;
+    }
+    my_slider.prototype.initArrows = function () {
+        var _ = this;
+
+        if (_.def.arrowLeft != '') {
+            _.def.arrowLeft.addEventListener('click', function () {
+                if (!hasClass(_.def.target, 'isAnimating')) {
+                    if (_.curSlide == 1) {
+                        _.curSlide = _.totalSlides + 1;
+                        _.sliderInner.style.left = -_.curSlide * _.slideW + 'px';
+                    }
+                    _.curSlide--;
+                    if (!_.lock) {
+                        _.gotoSlide();
+                    }
+                }
+            }, false);
+        }
+
+        if (_.def.arrowRight != '') {
+            _.def.arrowRight.addEventListener('click', function () {
+                if (!hasClass(_.def.target, 'isAnimating')) {
+                    if (_.curSlide == _.totalSlides) {
+                        _.curSlide = 0;
+                        _.sliderInner.style.left = -_.curSlide * _.slideW + 'px';
+                    }
+                    _.curSlide++;
+                    if (!_.lock) {
+                        _.gotoSlide();
+                    }
+                }
+            }, false);
+        }
+    }
+    my_slider.prototype.setDot = function () {
+        var _ = this;
+        var tardot = _.curSlide - 1;
+
+        for (var j = 0; j < _.totalSlides; j++) {
+            removeClass(_.def.dotsWrapper.querySelectorAll('li')[j], 'active');
+        }
+
+        if (_.curSlide - 1 < 0) {
+            tardot = _.totalSlides - 1;
+        } else if (_.curSlide - 1 > _.totalSlides - 1) {
+            tardot = 0;
+        }
+        addClass(_.def.dotsWrapper.querySelectorAll('li')[tardot], 'active');
+    }
+    my_slider.prototype.updateSliderDimension = function () {
+        var _ = this;
+
+        _.slideW = parseInt(_.def.target.querySelectorAll('.slide')[0].offsetWidth);
+        _.sliderInner.style.left = -_.slideW * _.curSlide + "px";
+
+        if (_.def.autoHeight) {
+            _.def.target.style.height = _.allSlides[_.curSlide].offsetHeight + "px";
+        } else {
+            for (var i = 0; i < _.totalSlides + 2; i++) {
+                if (_.allSlides[i].offsetHeight > _.def.target.offsetHeight) {
+                    _.def.target.style.height = _.allSlides[i].offsetHeight + "px";
+                }
+            }
+        }
+        _.def.afterChangeSlide(_);
+    }
+    return my_slider;
+})();
+
+var slider = new slider_plugin;
