@@ -45,19 +45,17 @@ var slider_plugin = (function () {
 
         var _ = this;
 
-        _.lock = false;
-
         _.def = {
             target: sl,
             dotsWrapper: $('.dots-wrapper'),
             arrowLeft: $('.arrow-left'),
             arrowRight: $('.arrow-right'),
             transition: {
-                speed: 3500,
+                speed: 2000,
                 easing: ''
             },
             autoHeight: true,
-            afterChangeSlide: function afterChangeSlide() { }
+            afterChangeSlide: function afterChangeSlide() {}
         }
 
         $extendObj(_.def, settings);
@@ -77,9 +75,7 @@ var slider_plugin = (function () {
         _.def.dotsWrapper.addEventListener('click', function (e) {
             if (e.target && e.target.nodeName == "LI") {
                 _.curSlide = e.target.getAttribute('data-slide');
-                if (!_.lock) {
-                    _.gotoSlide();
-                }
+                _.gotoSlide();
             }
         }, false);
     }
@@ -89,15 +85,15 @@ var slider_plugin = (function () {
     }
     my_slider.prototype.gotoSlide = function () {
         var _ = this;
-        _.lock = true;
+        _.isAnimating = true;
 
+        addClass(_.def.target, 'isAnimating');
         _.sliderInner.style.transition = 'left ' + _.def.transition.speed / 1000 + 's ' + _.def.transition.easing;
         _.sliderInner.style.left = -_.curSlide * _.slideW + 'px';
-        addClass(_.def.target, 'isAnimating');
         setTimeout(function () {
             _.sliderInner.style.transition = '';
             removeClass(_.def.target, 'isAnimating');
-            _.lock = false;
+            _.isAnimating = false;
         }, _.def.transition.speed);
         _.setDot();
         if (_.def.autoHeight) {
@@ -178,30 +174,32 @@ var slider_plugin = (function () {
 
         if (_.def.arrowLeft != '') {
             _.def.arrowLeft.addEventListener('click', function () {
-                if (!hasClass(_.def.target, 'isAnimating')) {
+                if (!_.isAnimating) {
+                    _.isAnimating = true;
                     if (_.curSlide == 1) {
                         _.curSlide = _.totalSlides + 1;
                         _.sliderInner.style.left = -_.curSlide * _.slideW + 'px';
                     }
                     _.curSlide--;
-                    if (!_.lock) {
+                    setTimeout(function () {
                         _.gotoSlide();
-                    }
+                    }, 20);
                 }
             }, false);
         }
 
         if (_.def.arrowRight != '') {
             _.def.arrowRight.addEventListener('click', function () {
-                if (!hasClass(_.def.target, 'isAnimating')) {
+                if (!_.isAnimating) {
+                    _.isAnimating = true;
                     if (_.curSlide == _.totalSlides) {
                         _.curSlide = 0;
                         _.sliderInner.style.left = -_.curSlide * _.slideW + 'px';
                     }
                     _.curSlide++;
-                    if (!_.lock) {
+                    setTimeout(function () {
                         _.gotoSlide();
-                    }
+                    }, 200);
                 }
             }, false);
         }
